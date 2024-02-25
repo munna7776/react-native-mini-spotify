@@ -5,36 +5,58 @@
  * @format
  */
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
   SafeAreaView,
-  ScrollView,
   StatusBar,
-  StyleSheet,
   Text,
-  useColorScheme,
   View,
+  StyleSheet,
 } from 'react-native';
+import { addTrack, musicPlayerSetup } from '../musicService';
+import { MusicControlPanel } from './components/music-control-panel';
+import { MusicDurationSlider } from './components/music-duration-slider';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+export default function App() {
+  const [isPlayerReady, setIsPlayerReady] = useState(false)
 
-function App(): React.JSX.Element {
+  useEffect(() => {
+    (async function setup() {
+      const isSetup = await musicPlayerSetup()
+      if(isSetup) {
+        await addTrack()
+      }
+      setIsPlayerReady(isSetup)
+    })()
+  },[])
+
+  if(!isPlayerReady) {
+    return (
+      <SafeAreaView style={styles.activityIndicatorContainer} >
+      <ActivityIndicator size={48} />
+    </SafeAreaView>
+    )
+  }
+
   return (
     <SafeAreaView>
-      <StatusBar />
-      <Text>Staring music player...</Text>
+      {/* <StatusBar /> */}
+      <Text>Music player is ready to hit the stage.</Text>
+      <View>
+      <MusicControlPanel />
+      <MusicDurationSlider />
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  activityIndicatorContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  },
   sectionContainer: {
     marginTop: 32,
     paddingHorizontal: 24,
@@ -52,5 +74,3 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
-
-export default App;
