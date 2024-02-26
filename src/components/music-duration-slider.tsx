@@ -1,11 +1,10 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import Slider from '@react-native-community/slider';
-import {useProgress} from 'react-native-track-player';
+import TrackPlayer, {useProgress} from 'react-native-track-player';
 
 export const MusicDurationSlider = () => {
   const {position, duration} = useProgress();
-  console.log({position,duration})
   return (
     <View style={styles.sliderContainer}>
       <Slider
@@ -15,6 +14,10 @@ export const MusicDurationSlider = () => {
         thumbTintColor="#FFF"
         maximumTrackTintColor="#FFF"
         style={{height: 40}}
+        onValueChange={(value) => {
+          const newPosition = +value.toFixed(3)
+          TrackPlayer.seekTo(newPosition)
+        }}
       />
       <View style={styles.timeTextContainer}>
         <Text style={styles.timeText}>

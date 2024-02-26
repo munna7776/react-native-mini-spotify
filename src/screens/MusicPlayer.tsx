@@ -43,8 +43,6 @@ export const MusicPlayer = () => {
     }
   });
 
-  console.log(currentTrack);
-
   return (
     <View style={styles.container}>
       <FlatList
