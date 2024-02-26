@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Dimensions,
   FlatList,
   Image,
@@ -6,7 +7,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import TrackPlayer, {
   Event,
   Track,
@@ -20,15 +21,29 @@ import {MusicControlPanel} from '../components/music-control-panel';
 const width = Dimensions.get('screen').width;
 
 export const MusicPlayer = () => {
-  const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
+  const [currentTrack, setCurrentTrack] = useState<Track | undefined>();
 
-  // useTrackPlayerEvents([Event.PlaybackActiveTrackChanged], async(event) => {
-  //     switch(event.type) {
-  //         case Event.PlaybackActiveTrackChanged:
-  //             const playingTrcak = await TrackPlayer.getTrack(event?.index + 1)
-  //             break;
-  //     }
-  // })
+  useEffect(() => {
+    (async () => {
+      const newCurrentTrack = await TrackPlayer.getTrack(0);
+      setCurrentTrack(newCurrentTrack);
+      TrackPlayer.play();
+    })();
+  }, []);
+
+  useTrackPlayerEvents([Event.PlaybackActiveTrackChanged], async event => {
+    switch (event.type) {
+      case Event.PlaybackActiveTrackChanged:
+        if (!event.index) {
+          break;
+        }
+        const newlyPlayingTrack = await TrackPlayer.getTrack(event.index);
+        setCurrentTrack(newlyPlayingTrack);
+        break;
+    }
+  });
+
+  console.log(currentTrack);
 
   return (
     <View style={styles.container}>
@@ -36,14 +51,18 @@ export const MusicPlayer = () => {
         horizontal
         data={trackLists}
         keyExtractor={song => song.id.toString()}
-        renderItem={song => {
+        renderItem={() => {
           return (
             <View style={styles.artWorkListsWrapper}>
               <View style={styles.artAlbumContainer}>
-                <Image
-                  source={{uri: song.item.artwork}}
-                  style={styles.artAlbum}
-                />
+                {currentTrack ? (
+                  <Image
+                    source={{uri: currentTrack.artwork}}
+                    style={styles.artAlbum}
+                  />
+                ) : (
+                  <ActivityIndicator size={40} />
+                )}
               </View>
             </View>
           );
@@ -51,8 +70,7 @@ export const MusicPlayer = () => {
         contentContainerStyle={styles.contentContainer}
         style={styles.flatList}
       />
-      <View
-        style={styles.panelAndInfoContainer}>
+      <View style={styles.panelAndInfoContainer}>
         {currentTrack && <MusicInfo track={currentTrack} />}
         <MusicDurationSlider />
         <MusicControlPanel />
@@ -70,7 +88,7 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   contentContainer: {
-    alignItems: "flex-end",
+    alignItems: 'flex-end',
   },
   flatList: {
     flex: 1,
@@ -92,6 +110,6 @@ const styles = StyleSheet.create({
   panelAndInfoContainer: {
     flex: 1,
     width: '100%',
-    alignItems: "center"
-  }
+    alignItems: 'center',
+  },
 });

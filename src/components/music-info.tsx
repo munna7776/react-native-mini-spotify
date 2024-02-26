@@ -8,13 +8,22 @@ type MusicInfoProps = {
 
 export const MusicInfo = ({track}: MusicInfoProps) => {
   return (
-    <View>
-      <View>
-        <Text>{track?.title}</Text>
-        <Text>{track?.album} | {track?.artist}</Text>
+    <>
+      <View >
+        <Text style={[styles.text]} >{track?.title}</Text>
+        <Text style={[styles.text]} >{track?.album} | {track?.artist}</Text>
       </View>
-    </View>
+    </>
   )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  infoContainer: {
+
+  },
+  text: {
+    color: "#fff",
+    fontSize: 15,
+    textAlign: "center"
+  }
+})
