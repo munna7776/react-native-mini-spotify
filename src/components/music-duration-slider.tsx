@@ -11,9 +11,9 @@ export const MusicDurationSlider = () => {
         value={position}
         minimumValue={0}
         maximumValue={duration}
-        thumbTintColor='#B83227'
-        maximumTrackTintColor='#B83227'
-        style={styles.slider}
+        thumbTintColor='#FFF'
+        maximumTrackTintColor='#FFF'
+        style={{height: 40}}
       />
       <View style={styles.timeTextContainer} >
         <Text style={styles.timeText}>{new Date(position * 1000).toTimeString().substring(0,5)}</Text>
@@ -25,22 +25,16 @@ export const MusicDurationSlider = () => {
 
 const styles = StyleSheet.create({
     sliderContainer: {
-        width: "90%",
-        // flex: 1,
-        // alignItems: "center",
-        marginTop: 10
-    },
-    slider: {
-        // width: 300,
-        height: 40,
+        // backgroundColor: "#fff",
+        width: "90%"
     },
     timeTextContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
-        // width: "100%"
+        paddingHorizontal: 14,
     },
     timeText: {
-        fontSize: 14,
-        color: "#B83227"
+        fontSize: 16,
+        color: "#FFF"
     }
 })

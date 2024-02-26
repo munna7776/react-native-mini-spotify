@@ -45,7 +45,7 @@ export const MusicControlPanel = () => {
           name={
             trackPlaybackState.state === State.Playing ? 'pause' : 'play-arrow'
           }
-          style={styles.icon}
+          style={[styles.icon, styles.playAndPause]}
           size={40}
         />
       </Pressable>
@@ -58,18 +58,19 @@ export const MusicControlPanel = () => {
 
 const styles = StyleSheet.create({
   controlContainer: {
-    // flex: 1,
+    width: "90%",
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: "center",
-    gap: 50
-    // height: 100,
-    // marginVertical: 50,
-    // width: 200,
-    // backgroundColor: "#74B9FF"
+    columnGap: 30,
+    marginTop: 40,
   },
   icon: {
-    color: '#B83227',
-    // color: "#ffffff"
+    color: "#ffffff"
   },
+  playAndPause: {
+    backgroundColor: "grey",
+    padding: 8,
+    borderRadius: 60
+  }
 });
